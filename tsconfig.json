@@ -1,0 +1,18 @@
+{
+"compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",// Path to your source files
+    "lib": ["ESnext"],//Librerias que se van a usar en el proyecto
+    "target": "ESNext",//compilar las librerias a la version ESNext
+    "moduleResolution": "NodeNext",//como se va a resolver los modulos
+    "module": "NodeNext",//como se va a compilar los modulos
+    "strict": false,//Ejecura typescript en modo no estricto
+    "sourceMap": false,//Permite debuguear el codigo
+    "esModuleInterop": true,//Permite importar modulos de ES6 a CommonJS
+    "declaration": true,//Cuando se compila el proyecto a java se pierde los tipados
+},
+//arreglo que trae todos los archivos .ts dentro de la carpeta src 
+"include": [
+    "src/**/*.ts"
+],
+}

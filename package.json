@@ -1,0 +1,20 @@
+{
+  "name": "codetienda",
+  "version": "1.0.0",
+  "description": "Proyecto para la gestion administrativa y comercial de los comerciantes de la Villa de San Diego de Ubate",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec ts-node  src/index.ts",
+    "build": "tsc" 
+  },
+  "author": "Rolando Castellanos",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
