@@ -1,8 +1,10 @@
 
 import express from 'express'// Importando express
 import router from './router'// Importando el router
+import { connectToDatabase } from './config/db'// Importando la funcion de conexion a la base de datos
 
 const app=express()// Instanciando express
+connectToDatabase()// Conectando a la base de datos
 //Leer formulario
 app.use(express.json())//Middleware para leer el cuerpo de la peticion en formato JSON
 app.use('/',router)//cada vez que se haga una peticion a la ruta entra a cada una de las rutas definidas en el router

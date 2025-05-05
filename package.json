@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node  src/index.ts",
-    "build": "tsc" 
+    "build": "tsc"
   },
   "author": "Rolando Castellanos",
   "license": "ISC",
   "dependencies": {
     "express": "^5.1.0",
+    "mongoose": "^8.14.1",
+    "mongose": "^0.0.2-security",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
