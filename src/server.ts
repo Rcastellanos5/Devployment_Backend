@@ -1,5 +1,7 @@
 
 import express from 'express'// Importando express
+import 'dotenv/config'// Importando dotenv para leer variables de entorno
+
 import router from './router'// Importando el router
 import { connectToDatabase } from './config/db'// Importando la funcion de conexion a la base de datos
 

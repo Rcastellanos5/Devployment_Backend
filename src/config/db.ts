@@ -1,12 +1,13 @@
 import mongoose, { connection } from "mongoose";
-
+import colors from "colors";
+import User, {IUser} from '../models/User';//Importando el modelo de usuario
 export const connectToDatabase = async () => {
     try {
-        const url ='mongodb+srv://Rolando:1002525933@cluster0.vjq1la5.mongodb.net/bd_codetienda'//URL de la base de datos
-        const {connection} = await mongoose.connect(url)//Conectando a la base de datos
-        const url2=`${connection.host}:${connection.port}}`//URL de la base de datos
+        
+        const {connection} = await mongoose.connect(process.env.MONGO_URI)//Conectando a la base de datos
+        const url=`${connection.host}:${connection.port}}`//URL de la base de datos
        
-        console.log(`conexion exitosa en ${url2}`)//Imprimiendo puerto y host de la base de datos
+        console.log(colors.italic.blue(`conexion exitosa en ${url}`))//Imprimiendo puerto y host de la base de datos
     }
     catch (error) {
         console.log(error.message)//Imprimiendo el error
