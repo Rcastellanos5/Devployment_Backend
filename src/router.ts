@@ -10,6 +10,7 @@ const router=Router()//Instanciando Router
  * Get se visita una URl
  * Post cuando se envia un formulario
 */
+
 router.post('/auth/register', 
     body('handle')
         .notEmpty()//Validando que el campo handle no este vacio
