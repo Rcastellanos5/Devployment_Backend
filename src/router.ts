@@ -1,6 +1,6 @@
 //Se define las rutas de la aplicacion
 import {Router}from 'express'// Importando Router de express
-import { createAccount, authUser } from './handlers'//Importando la funcion de crear cuenta
+import { createAccount, authUser, getUser } from './handlers'//Importando la funcion de crear cuenta
 import {body} from 'express-validator'//Importando body de express-validator para validar los datos del formulario
 const router=Router()//Instanciando Router
 
@@ -38,5 +38,6 @@ router.post('/auth/login',
         .withMessage('La contraseña no puede ir vacia y debe tener al menos 8 caracteres'),//Mensaje de error si el campo password esta vacio o no tiene la longitud minima
 
         authUser)
+        router.get('/User',getUser)
 
 export default router//Exportando el router para usarlo en otros archivos
