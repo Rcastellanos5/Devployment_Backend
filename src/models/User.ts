@@ -1,11 +1,15 @@
-import mongoose from "mongoose";    
-export interface IUser {//Definiendo la interfaz de usuario
+import mongoose ,{Schema, Document}from "mongoose";    
+import { extend } from "slug";
+//hereda todo el modelon de Mongos
+export interface IUser extends Document {//Definiendo la interfaz de usuario
     handle: string; //Nombre de usuario
     name: string; //Nombre del usuario
     email: string; //Email del usuario
     password: string; //Contraseña del usuario
+    descripcion: string;
+    imagen:string
 }
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
     handle:{
         type: String,
         required: true,
@@ -32,6 +36,15 @@ const userSchema = new mongoose.Schema({
         required: true, //Campo requerido
         trim: true, //Eliminar espacios en blanco al inicio y al final
     },
+    descripcion:{
+        type:String,
+        default:''
+    }, 
+    imagen:{
+        type:String,
+        default:""
+    }
+
 
 })
 const User =mongoose.model<IUser>('User', userSchema) //Creando el modelo de usuario

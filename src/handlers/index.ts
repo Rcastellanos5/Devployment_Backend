@@ -1,5 +1,9 @@
 import User from "../models/User"   
 import slug from "slug"//Importando slug para crear un slug a partir del nombre de usuario
+import formidable from "formidable"
+import cloudinary  from "../config/cloudinary"
+import jwt from "jsonwebtoken"
+import {v4 as uuid}from 'uuid'
 import { validationResult } from "express-validator"//Importando validationResult para validar los datos del formulario
 import type {Request, Response} from 'express'//Importando Request y Response de express
 import { hashPassword,checkPassword } from "../util/auth"
@@ -20,7 +24,7 @@ export const createAccount =async (req:Request, res:Response) => {
         const error =new Error('El usuario ya existe')//Creando un nuevo error
         return res.status(409).json({error:error.message})///Estableciendo el estado de la respuesta a 400 (Bad Request)
     }
-
+   //Le quita los espacios al campo handle y consulta si este ya existen 
     const handle = slug(req.body.handle,'')//slug es una libreria que convierte un string en un slug, en este caso el nombre de usuario
     const handleExist=await User.findOne({handle})//Buscando si el nombre de usuario ya existe
     if (handleExist){
@@ -38,6 +42,7 @@ export const createAccount =async (req:Request, res:Response) => {
 
     res.status(201).send('Usuario creado')//Enviando mensaje de exito
 }
+//handler para autenticar un usuario 
 export const authUser=async(req:Request, res:Response)=>{
     console.log("mensaje resivido", req.body)
     const{email,password}=req.body
@@ -62,10 +67,60 @@ export const authUser=async(req:Request, res:Response)=>{
     res.send(token)
 
 }
+//Verificacion con el JWT
 export const getUser=async(req:Request, res:Response)=>{
-    const bearer = req.headers.authorization
-    if(!bearer){
-        const error=new Error('No autorizado')
-        return res.status(401).json({error: error.message})
+    res.json(req.user)
+
+}
+
+export const updateUser=async(req:Request, res:Response)=>{
+    try{
+       const{descripcion}=req.body 
+       const handle = slug(req.body.handle,'')//slug es una libreria que convierte un string en un slug, en este caso el nombre de usuario
+        const handleExist=await User.findOne({handle})//Buscando si el nombre de usuario ya existe
+        if (handleExist&&handleExist.email !==req.user.email){
+            const error =new Error('El nombre de usuario ya existe')//Creando un nuevo error
+            return res.status(409).json({error:error.message})
+        }
+        //Actualizar usuario
+        req.user.descripcion=descripcion
+        req.user.handle=handle
+        await req.user.save()
+        res.send('Perfil Actualizado')
+    }catch(e){
+        const error= new Error ("Hubo un erro")
+        return res.status(500).json({error:error.message})
+    }
+}
+//Handler para subir una imagen 
+export const UploadImage =async (req:Request, res:Response)=>{
+    //Se configura 
+    const form= formidable({multiples:false})
+    //Se lee los datos que el usuario envio 
+    
+    try{
+        
+       form.parse(req,(error, fields, files)=>{
+        
+        cloudinary.uploader.upload(files.file[0].filepath,{public_id:uuid()}, async function(error,result){
+            if(error){
+                const error=new Error("Hubo un error al subir la imagen")
+                return res.status(500).json({error: error.message})
+            }
+            if(result){
+                //Atualiza el campo imagen del usuario autemticado
+                req.user.imagen=result.secure_url
+                //Guarda los cambios en la base de datos 
+                await req.user.save()
+                //Devuelve una respuesta tipo JSON 
+                res.json({imagen: result.secure_url})
+            }
+            
+        })
+    }) 
+
+    }catch(e){
+        const error=new Error("Hubo un erro")
+        return res.status(500).json({error: error.message})
     }
 }

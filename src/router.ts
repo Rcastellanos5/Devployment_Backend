@@ -1,6 +1,7 @@
 //Se define las rutas de la aplicacion
 import {Router}from 'express'// Importando Router de express
-import { createAccount, authUser, getUser } from './handlers'//Importando la funcion de crear cuenta
+import { autenticacion } from './middleware/Auth'
+import { createAccount, authUser, getUser, updateUser, UploadImage } from './handlers'//Importando la funcion de crear cuenta
 import {body} from 'express-validator'//Importando body de express-validator para validar los datos del formulario
 const router=Router()//Instanciando Router
 
@@ -38,6 +39,19 @@ router.post('/auth/login',
         .withMessage('La contraseña no puede ir vacia y debe tener al menos 8 caracteres'),//Mensaje de error si el campo password esta vacio o no tiene la longitud minima
 
         authUser)
-        router.get('/User',getUser)
+    router.get('/User',autenticacion,getUser)
 
+//endpoint para actualizar un usuari 
+    router.patch('/User',
+        body('handle')
+            .notEmpty()//Validando que el campo handle no este vacio
+            .withMessage('El handle no puede ir vacio'),//Mensaje de error si el campo handle esta vacio
+        body('descripcion')
+            .notEmpty()//Validando que el campo name no este vacio
+            .withMessage('La descripcion no puede ir vacia'),//Mensaje de error si el campo name esta vacio 
+        
+            autenticacion, 
+            updateUser)
+
+    router.post('/User/Image',autenticacion,UploadImage)
 export default router//Exportando el router para usarlo en otros archivos
