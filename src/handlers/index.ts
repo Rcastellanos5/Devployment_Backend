@@ -75,7 +75,7 @@ export const getUser=async(req:Request, res:Response)=>{
 
 export const updateUser=async(req:Request, res:Response)=>{
     try{
-       const{descripcion}=req.body 
+       const{descripcion,links}=req.body 
        const handle = slug(req.body.handle,'')//slug es una libreria que convierte un string en un slug, en este caso el nombre de usuario
         const handleExist=await User.findOne({handle})//Buscando si el nombre de usuario ya existe
         if (handleExist&&handleExist.email !==req.user.email){
@@ -85,6 +85,7 @@ export const updateUser=async(req:Request, res:Response)=>{
         //Actualizar usuario
         req.user.descripcion=descripcion
         req.user.handle=handle
+        req.user.links=links
         await req.user.save()
         res.send('Perfil Actualizado')
     }catch(e){
@@ -122,5 +123,40 @@ export const UploadImage =async (req:Request, res:Response)=>{
     }catch(e){
         const error=new Error("Hubo un erro")
         return res.status(500).json({error: error.message})
+    }
+}
+//Odtien el usuario mediante el handle 
+export const getUserByHandle =async(req:Request, res:Response)=>{
+    try{
+        //trae el valor de handle 
+        const{handle}=req.params
+
+        //Hace la consulta a la base de datos 
+        const user=await User.findOne({handle}).select('-_id -__v -email -password')
+        //Si no existe manda un mensaje de erro 400
+        if (!user){
+            const error =new Error("No se encontro el usuario")
+            return res.status(404).json({error:error.message})
+        }
+        //Devuelve el usuario encontrado como JSON
+        res.json(user)
+        console.log(user)
+    }catch(e){
+        const error=new Error("Hubo un error")
+        return res.status(500).json({error:error.message})
+    }
+}
+export const SearchByHandle =async (req:Request, res:Response)=>{
+    try{
+        const {handle} =req.body
+        const userExist= await User.findOne({handle})
+        if (userExist){
+            const error =new Error (`${handle} ya esta registrado`)
+            return res.status(404).json({error:error.message})
+        }
+        res.send(`${handle} esta disponible`)
+    }catch(e){
+        const error=new Error("Hubo un error ")
+        return res.status(500).json({error:error.message})
     }
 }

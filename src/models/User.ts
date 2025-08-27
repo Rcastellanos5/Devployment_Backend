@@ -7,7 +7,8 @@ export interface IUser extends Document {//Definiendo la interfaz de usuario
     email: string; //Email del usuario
     password: string; //Contraseña del usuario
     descripcion: string;
-    imagen:string
+    imagen:string;
+    links:string
 }
 const userSchema = new Schema({
     handle:{
@@ -43,6 +44,10 @@ const userSchema = new Schema({
     imagen:{
         type:String,
         default:""
+    },
+    links:{
+        type:String,
+        default:'[]'
     }
 
 

@@ -1,7 +1,7 @@
 //Se define las rutas de la aplicacion
 import {Router}from 'express'// Importando Router de express
 import { autenticacion } from './middleware/Auth'
-import { createAccount, authUser, getUser, updateUser, UploadImage } from './handlers'//Importando la funcion de crear cuenta
+import { createAccount, authUser, getUser, updateUser, UploadImage, getUserByHandle, SearchByHandle } from './handlers'//Importando la funcion de crear cuenta
 import {body} from 'express-validator'//Importando body de express-validator para validar los datos del formulario
 const router=Router()//Instanciando Router
 
@@ -54,4 +54,12 @@ router.post('/auth/login',
             updateUser)
 
     router.post('/User/Image',autenticacion,UploadImage)
+    //Ruta dinamica que cambia con el usuario 
+    router.get('/:handle',getUserByHandle)
+    router.post('/search',
+        body('/handle')
+        .notEmpty()
+        .withMessage("El handle no puede ir vacio"), 
+        SearchByHandle
+    )
 export default router//Exportando el router para usarlo en otros archivos
